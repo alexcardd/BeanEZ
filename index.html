@@ -8,6 +8,13 @@
     <meta name="apple-mobile-web-app-title" content="BeanEZ">
     <meta name="theme-color" content="#E67E22">
     <meta name="description" content="Bean tracker for coffee nerds">
+    <script>
+        // iOS fix: detect if we're at root and redirect to /beanez/
+        if (window.location.pathname === '/' || window.location.pathname === '') {
+            const repoName = 'beanez'; // CHANGE THIS to your repo name
+            window.location.href = '/' + repoName + '/';
+        }
+    </script>
     <title>BeanEZ - Bean Tracker for Coffee Nerds</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
