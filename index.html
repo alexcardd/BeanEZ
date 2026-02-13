@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BeanEZ">
+    <meta name="theme-color" content="#E67E22">
+    <link rel="manifest" href="manifest.json">
+    <title>BeanEZ - Bean Tracker for Coffee Nerds</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2C3E50;
+            --primary-light: #34495E;
+            --accent: #E67E22;
+            --accent-light: #F39C12;
+            --bg: #F1EBE1;
+            --card-bg: #FDFCFA;
+            --text: #2C3E50;
+            --text-light: #6B7280;
+            --border: #E5DED3;
+            --tan: #F5E6D3;
+            --teal: #2C7A7B;
+            --slate: #475569;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .header {
+            background: linear-gradient(180deg, #F8F1E8 0%, #F1EBE1 100%);
+            color: var(--text);
+            padding: 2rem 1rem 2.25rem;
+            border-bottom: none;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+        }
+
+        .header h1 {
+            font-family: 'Nunito', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .logo-icon {
+            width: 52px;
+            height: 58px;
+            position: relative;
+        }
+
+        .coffee-bean {
+            width: 38px;
+            height: 52px;
+            background: 
+                radial-gradient(ellipse at 25% 25%, #B89968, transparent 45%),
+                radial-gradient(ellipse at 75% 70%, #6B5539, transparent 50%),
+                linear-gradient(140deg, #9B8156 0%, #8B6F47 35%, #7A5C3D 65%, #6B4423 100%);
+            position: relative;
+            border-radius: 58% 42% 55% 45% / 48% 52% 48% 52%;
+            transform: rotate(-10deg);
+            box-shadow: 
+                inset -7px -9px 16px rgba(0, 0, 0, 0.5),
+                inset 5px 4px 10px rgba(155, 129, 86, 0.3),
+                inset 0 -2px 8px rgba(0, 0, 0, 0.3),
+                0 8px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Organic center seam - irregular and wavy */
+        .bean-line {
+            position: absolute;
+            top: 8%;
+            left: 42%;
+            width: 16%;
+            height: 84%;
+            transform: translateX(-50%);
+        }
+
+        .bean-line::before,
+        .bean-line::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 52%;
+            border: 3px solid rgba(45, 30, 20, 0.7);
+            border-radius: 65% 35% / 100% 100%;
+            box-shadow: 
+                inset 1px 0 3px rgba(0, 0, 0, 0.6),
+                inset -1px 0 3px rgba(0, 0, 0, 0.6);
+        }
+
+        .bean-line::before {
+            top: -1%;
+            left: 2%;
+            border-bottom: none;
+            transform: rotate(-3deg);
+        }
+
+        .bean-line::after {
+            bottom: -1%;
+            left: -2%;
+            border-top: none;
+            transform: rotate(2deg) scaleX(1.05);
+        }
+
+        /* Add subtle texture/variation */
+        .coffee-bean::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            right: 10%;
+            width: 20%;
+            height: 25%;
+            background: radial-gradient(circle, rgba(0, 0, 0, 0.15), transparent 60%);
+            border-radius: 50%;
+        }
+
+        .coffee-bean::after {
+            content: '';
+            position: absolute;
+            bottom: 20%;
+            left: 15%;
+            width: 18%;
+            height: 20%;
+            background: radial-gradient(circle, rgba(155, 129, 86, 0.2), transparent 50%);
+            border-radius: 50%;
+        }
+
+        .beanie-hat {
+            position: absolute;
+            top: -6px;
+            left: 46%;
+            transform: translateX(-50%) rotate(-22deg);
+            width: 36px;
+            height: 21px;
+            background: linear-gradient(172deg, #D2691E 0%, #C85A17 100%);
+            border-radius: 18px 18px 3px 4px;
+            z-index: 10;
+            border: 2.5px solid #B8531A;
+            box-shadow: 
+                0 4px 14px rgba(0, 0, 0, 0.35),
+                inset -2px -3px 6px rgba(0, 0, 0, 0.35);
+        }
+
+        .beanie-ribbing {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 7px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2.5px,
+                rgba(139, 69, 19, 0.55) 2.5px,
+                rgba(139, 69, 19, 0.55) 3.5px
+            );
+            border-radius: 0 0 3px 4px;
+        }
+
+        .beanie-pom {
+            position: absolute;
+            top: -7px;
+            left: 60%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle at 35% 35%, #E87E2E, #D2691E);
+            border-radius: 50%;
+            border: 2.5px solid #B8531A;
+            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.35);
+        }
+
+        .subtitle {
+            font-size: 0.9375rem;
+            color: #5A5A5A;
+            font-weight: 500;
+            margin-top: 0.125rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .backup-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .backup-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .backup-btn:hover {
+            background: white;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(230, 126, 34, 0.15);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 0.625rem;
+            overflow-x: auto;
+            padding: 1.125rem 1rem;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(229, 222, 211, 0.6);
+            scrollbar-width: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+
+        .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-chip {
+            padding: 0.625rem 1.25rem;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text);
+        }
+
+        .filter-chip:hover {
+            border-color: var(--accent);
+            background: rgba(230, 126, 34, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(230, 126, 34, 0.15);
+        }
+
+        .filter-chip.active {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.25);
+            transform: translateY(0);
+        }
+
+        .beans-grid {
+            padding: 1.25rem;
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        .bean-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.75rem;
+            box-shadow: 
+                0 1px 3px rgba(0, 0, 0, 0.04),
+                0 2px 8px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(229, 222, 211, 0.5);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bean-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            opacity: 0;
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bean-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.06),
+                0 8px 32px rgba(0, 0, 0, 0.04);
+            border-color: rgba(229, 222, 211, 0.8);
+        }
+
+        .bean-card:hover::before {
+            opacity: 1;
+        }
+
+        .bean-card.expanded {
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.06),
+                0 8px 32px rgba(0, 0, 0, 0.04);
+        }
+
+        .bean-card.expanded::before {
+            opacity: 1;
+        }
+
+        .bean-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.875rem;
+            gap: 1rem;
+        }
+
+        .bean-name {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.375rem;
+            font-family: 'Nunito', sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        .roaster {
+            font-size: 0.9375rem;
+            color: #5A5A5A;
+            font-weight: 600;
+        }
+
+        .grind-badge {
+            background: var(--teal);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Nunito', sans-serif;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(44, 122, 123, 0.25);
+            flex-shrink: 0;
+        }
+
+        .bean-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .meta-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.4375rem 0.875rem;
+            background: rgba(241, 235, 225, 0.6);
+            border-radius: 12px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: all 0.2s ease;
+        }
+
+        .meta-tag:hover {
+            background: rgba(241, 235, 225, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .method-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.375rem 0.875rem;
+            border-radius: 10px;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .bean-details {
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+            display: none;
+        }
+
+        .bean-card.expanded .bean-details {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.625rem;
+            font-size: 0.9375rem;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .detail-value {
+            color: var(--text-light);
+        }
+
+        .notes-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--tan);
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            font-style: italic;
+            color: var(--text);
+        }
+
+        .edit-btn {
+            background: transparent;
+            color: var(--slate);
+            border: 1.5px solid var(--border);
+            padding: 0.625rem 1.125rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .edit-btn:hover {
+            background: var(--bg);
+            border-color: var(--slate);
+            transform: translateY(-1px);
+        }
+
+        .edit-btn::before {
+            content: '✎';
+            font-size: 1rem;
+            font-style: normal;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            border-radius: 50%;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(230, 126, 34, 0.4);
+            transition: all 0.3s;
+            z-index: 50;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 6px 30px rgba(230, 126, 34, 0.5);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(44, 62, 80, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: start;
+            justify-content: center;
+            padding-top: 2rem;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-family: 'Nunito', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            cursor: pointer;
+            color: var(--text-light);
+            padding: 0.5rem;
+            line-height: 1;
+            transition: all 0.2s;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .close-btn:hover {
+            background: var(--bg);
+            transform: rotate(90deg);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: var(--text);
+            font-size: 0.875rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .toggle-detail {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+            width: 100%;
+            color: var(--text);
+        }
+
+        .toggle-detail:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .detail-section {
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .detail-section.active {
+            display: block;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(230, 126, 34, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .photo-upload {
+            border: 2px dashed var(--border);
+            border-radius: 14px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1rem;
+            background: var(--bg);
+        }
+
+        .photo-upload:hover {
+            border-color: var(--accent);
+            background: rgba(230, 126, 34, 0.05);
+        }
+
+        .photo-preview {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-top: 0.5rem;
+        }
+
+        .level-indicator {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .level-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .level-dot.filled {
+            background: var(--accent);
+        }
+
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            <div class="logo-icon">
+                <div class="coffee-bean">
+                    <div class="bean-line"></div>
+                    <div class="beanie-hat">
+                        <div class="beanie-pom"></div>
+                        <div class="beanie-ribbing"></div>
+                    </div>
+                </div>
+            </div>
+            BeanEZ
+        </h1>
+        <div class="subtitle">Bean tracker for coffee nerds</div>
+        <div class="backup-controls">
+            <button class="backup-btn" id="exportBtn">⬇ Export</button>
+            <button class="backup-btn" id="importBtn">⬆ Import</button>
+            <input type="file" id="importFile" accept=".json" style="display: none;">
+        </div>
+    </div>
+
+    <div class="filter-bar" id="filterBar">
+        <button class="filter-chip active" data-filter="all">All Beans</button>
+        <button class="filter-chip" data-filter="v60">V60</button>
+        <button class="filter-chip" data-filter="espresso">Espresso</button>
+        <button class="filter-chip" data-filter="roaster">By Roaster</button>
+        <button class="filter-chip" data-filter="region">By Region</button>
+    </div>
+
+    <div class="beans-grid" id="beansGrid">
+        <div class="empty-state">
+            <div class="empty-state-icon">☕</div>
+            <h3>No beans yet!</h3>
+            <p>Tap the + button to add your first coffee bean</p>
+        </div>
+    </div>
+
+    <button class="fab" id="addBeanBtn">+</button>
+
+    <div class="modal" id="addBeanModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Bean</h2>
+                <button class="close-btn" id="closeModalBtn">×</button>
+            </div>
+
+            <form id="beanForm">
+                <input type="hidden" id="editId">
+                
+                <!-- Quick Add Section -->
+                <div class="form-group">
+                    <label class="form-label">Shorthand *</label>
+                    <input type="text" class="form-input" name="shorthand" id="shorthand" required placeholder="e.g., Ethiopia Washed, Yirgacheffe Natural">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Region (Country) *</label>
+                    <input type="text" class="form-input" name="region" id="region" required placeholder="e.g., Ethiopia, Colombia">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Sub-region</label>
+                    <input type="text" class="form-input" name="subregion" id="subregion" placeholder="e.g., Huila, Yirgacheffe">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Farm/Producer</label>
+                    <input type="text" class="form-input" name="producer" id="producer" placeholder="e.g., Negusse Debela">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Variety</label>
+                    <input type="text" class="form-input" name="variety" id="variety" placeholder="e.g., Heirloom, Gesha, Caturra">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Process *</label>
+                        <select class="form-select" name="process" id="process" required>
+                            <option value="">Select...</option>
+                            <option value="washed">Washed</option>
+                            <option value="natural">Natural</option>
+                            <option value="honey">Honey</option>
+                            <option value="anaerobic">Anaerobic</option>
+                            <option value="carbonic">Carbonic Maceration</option>
+                            <option value="wet-hulled">Wet Hulled</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Roaster *</label>
+                        <input type="text" class="form-input" name="roaster" id="roaster" required placeholder="e.g., Onyx">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Brew Method *</label>
+                        <select class="form-select" name="brewMethod" id="brewMethod" required>
+                            <option value="">Select...</option>
+                            <option value="v60">V60</option>
+                            <option value="espresso">Espresso</option>
+                            <option value="aeropress">Aeropress</option>
+                            <option value="french-press">French Press</option>
+                            <option value="moka-pot">Moka Pot</option>
+                            <option value="oxo">Oxo</option>
+                            <option value="orea">Orea</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Grind Size *</label>
+                        <input type="text" class="form-input" name="grindSize" id="grindSize" required placeholder="e.g., 40 or 2K">
+                    </div>
+                </div>
+
+                <button type="button" class="toggle-detail" id="toggleDetail">
+                    + Add More Details
+                </button>
+
+                <!-- Detailed Section -->
+                <div class="detail-section" id="detailSection">
+                    <div class="form-group">
+                        <label class="form-label">Photo (Optional)</label>
+                        <div class="photo-upload" id="photoUpload">
+                            <div>📸 Tap to add photo</div>
+                            <input type="file" accept="image/*" id="photoInput" style="display: none;">
+                        </div>
+                        <img id="photoPreview" class="photo-preview" style="display: none;">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Roast Level</label>
+                        <select class="form-select" name="roastLevel" id="roastLevel">
+                            <option value="">Select...</option>
+                            <option value="1">Ultra Light</option>
+                            <option value="2">Light</option>
+                            <option value="3">Light-Medium</option>
+                            <option value="4">Medium</option>
+                            <option value="5">Dark</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Roast Date</label>
+                            <input type="date" class="form-input" name="roastDate" id="roastDate">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Brew Date</label>
+                            <input type="date" class="form-input" name="brewDate" id="brewDate">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-textarea" name="notes" id="notes" placeholder="Your tasting notes, brewing observations, etc."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="saveBtn">Save Bean</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let beans = JSON.parse(localStorage.getItem('beanezBeans') || '[]');
+        let currentFilter = 'all';
+        let photoData = null;
+        let editingId = null;
+
+        // Roast level names
+        const roastLevelNames = {
+            '1': 'Ultra Light',
+            '2': 'Light',
+            '3': 'Light-Medium',
+            '4': 'Medium',
+            '5': 'Dark'
+        };
+
+        // Elements
+        const addBeanBtn = document.getElementById('addBeanBtn');
+        const modal = document.getElementById('addBeanModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const beanForm = document.getElementById('beanForm');
+        const saveBtn = document.getElementById('saveBtn');
+        const beansGrid = document.getElementById('beansGrid');
+        const toggleDetailBtn = document.getElementById('toggleDetail');
+        const detailSection = document.getElementById('detailSection');
+        const photoUpload = document.getElementById('photoUpload');
+        const photoInput = document.getElementById('photoInput');
+        const photoPreview = document.getElementById('photoPreview');
+        const filterBar = document.getElementById('filterBar');
+        const modalTitle = document.getElementById('modalTitle');
+
+        // Modal controls
+        addBeanBtn.addEventListener('click', () => {
+            editingId = null;
+            modalTitle.textContent = 'Add Bean';
+            modal.classList.add('active');
+            const brewDateInput = document.getElementById('brewDate');
+            if (brewDateInput) {
+                brewDateInput.valueAsDate = new Date();
+            }
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+
+        function closeModal() {
+            modal.classList.remove('active');
+            beanForm.reset();
+            detailSection.classList.remove('active');
+            photoPreview.style.display = 'none';
+            photoData = null;
+            editingId = null;
+            toggleDetailBtn.textContent = '+ Add More Details';
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Toggle detail section
+        toggleDetailBtn.addEventListener('click', () => {
+            detailSection.classList.toggle('active');
+            toggleDetailBtn.textContent = detailSection.classList.contains('active') 
+                ? '− Hide Details' 
+                : '+ Add More Details';
+        });
+
+        // Photo upload
+        photoUpload.addEventListener('click', () => photoInput.click());
+        
+        photoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    photoData = e.target.result;
+                    photoPreview.src = photoData;
+                    photoPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Edit bean function
+        function editBean(id) {
+            const bean = beans.find(b => b.id === id);
+            if (!bean) return;
+
+            editingId = id;
+            modalTitle.textContent = 'Edit Bean';
+            
+            // Populate form
+            document.getElementById('shorthand').value = bean.shorthand;
+            document.getElementById('region').value = bean.region;
+            document.getElementById('subregion').value = bean.subregion || '';
+            document.getElementById('producer').value = bean.producer || '';
+            document.getElementById('variety').value = bean.variety || '';
+            document.getElementById('process').value = bean.process;
+            document.getElementById('roaster').value = bean.roaster;
+            document.getElementById('brewMethod').value = bean.brewMethod;
+            document.getElementById('grindSize').value = bean.grindSize;
+            document.getElementById('roastLevel').value = bean.roastLevel || '';
+            document.getElementById('roastDate').value = bean.roastDate || '';
+            document.getElementById('brewDate').value = bean.brewDate || '';
+            document.getElementById('notes').value = bean.notes || '';
+            
+            if (bean.photo) {
+                photoData = bean.photo;
+                photoPreview.src = bean.photo;
+                photoPreview.style.display = 'block';
+            }
+
+            // Show detail section if has details
+            if (hasDetails(bean)) {
+                detailSection.classList.add('active');
+                toggleDetailBtn.textContent = '− Hide Details';
+            }
+
+            modal.classList.add('active');
+        }
+
+        // DIRECT BUTTON CLICK HANDLER
+        saveBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            saveBean();
+        });
+
+        // Form submission handler
+        beanForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            saveBean();
+        });
+
+        function saveBean() {
+            const bean = {
+                id: editingId || Date.now(),
+                shorthand: document.getElementById('shorthand').value,
+                region: document.getElementById('region').value,
+                subregion: document.getElementById('subregion').value,
+                producer: document.getElementById('producer').value,
+                variety: document.getElementById('variety').value,
+                process: document.getElementById('process').value,
+                roaster: document.getElementById('roaster').value,
+                brewMethod: document.getElementById('brewMethod').value,
+                grindSize: document.getElementById('grindSize').value,
+                roastLevel: document.getElementById('roastLevel').value,
+                roastDate: document.getElementById('roastDate').value,
+                brewDate: document.getElementById('brewDate').value,
+                notes: document.getElementById('notes').value,
+                photo: photoData,
+                timestamp: editingId ? beans.find(b => b.id === editingId).timestamp : Date.now()
+            };
+
+            if (editingId) {
+                // Update existing bean
+                const index = beans.findIndex(b => b.id === editingId);
+                beans[index] = bean;
+            } else {
+                // Add new bean
+                beans.unshift(bean);
+            }
+
+            localStorage.setItem('beanezBeans', JSON.stringify(beans));
+            
+            closeModal();
+            renderBeans();
+        }
+
+        // Render beans
+        function renderBeans() {
+            let filteredBeans = beans;
+
+            if (currentFilter !== 'all') {
+                if (currentFilter === 'v60' || currentFilter === 'espresso') {
+                    filteredBeans = beans.filter(b => b.brewMethod === currentFilter);
+                }
+            }
+
+            if (filteredBeans.length === 0) {
+                beansGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">☕</div>
+                        <h3>No beans found</h3>
+                        <p>Try a different filter or add a new bean</p>
+                    </div>
+                `;
+                return;
+            }
+
+            beansGrid.innerHTML = filteredBeans.map(bean => {
+                const fullRegion = bean.subregion ? `${bean.region}, ${bean.subregion}` : bean.region;
+                
+                // Generate level indicator
+                let levelIndicator = '';
+                if (bean.roastLevel) {
+                    const level = parseInt(bean.roastLevel);
+                    levelIndicator = '<div class="level-indicator">';
+                    for (let i = 1; i <= 5; i++) {
+                        levelIndicator += `<div class="level-dot ${i <= level ? 'filled' : ''}"></div>`;
+                    }
+                    levelIndicator += `<span style="margin-left: 0.375rem; font-size: 0.75rem;">${roastLevelNames[bean.roastLevel]}</span></div>`;
+                }
+                
+                return `
+                <div class="bean-card" data-id="${bean.id}">
+                    <div class="bean-header">
+                        <div style="flex: 1;">
+                            <div class="bean-name">${bean.shorthand}</div>
+                            <div class="roaster">${bean.roaster}</div>
+                        </div>
+                        <div class="grind-badge">${bean.grindSize}</div>
+                    </div>
+                    
+                    <div class="bean-meta">
+                        <span class="method-badge">${bean.brewMethod.replace('-', ' ')}</span>
+                        ${bean.region ? `<span class="meta-tag">📍 ${fullRegion}</span>` : ''}
+                        ${bean.variety ? `<span class="meta-tag">🌱 ${bean.variety}</span>` : ''}
+                        ${bean.process ? `<span class="meta-tag">〰️ ${bean.process}</span>` : ''}
+                    </div>
+
+                    ${levelIndicator ? `<div style="margin-top: 0.75rem;">${levelIndicator}</div>` : ''}
+
+                    ${hasDetails(bean) ? `
+                        <div class="bean-details">
+                            ${bean.variety ? `<div class="detail-row"><span class="detail-label">Variety:</span><span class="detail-value">${bean.variety}</span></div>` : ''}
+                            ${bean.region ? `<div class="detail-row"><span class="detail-label">Region:</span><span class="detail-value">${fullRegion}</span></div>` : ''}
+                            ${bean.producer ? `<div class="detail-row"><span class="detail-label">Producer:</span><span class="detail-value">${bean.producer}</span></div>` : ''}
+                            ${bean.process ? `<div class="detail-row"><span class="detail-label">Process:</span><span class="detail-value">${bean.process}</span></div>` : ''}
+                            ${bean.roastDate ? `<div class="detail-row"><span class="detail-label">Roast Date:</span><span class="detail-value">${formatDate(bean.roastDate)}</span></div>` : ''}
+                            ${bean.brewDate ? `<div class="detail-row"><span class="detail-label">Brew Date:</span><span class="detail-value">${formatDate(bean.brewDate)}</span></div>` : ''}
+                            ${bean.notes ? `<div class="notes-section">"${bean.notes}"</div>` : ''}
+                            ${bean.photo ? `<img src="${bean.photo}" style="width: 100%; border-radius: 12px; margin-top: 0.75rem;">` : ''}
+                            <button class="edit-btn" onclick="event.stopPropagation(); editBean(${bean.id})">Edit</button>
+                        </div>
+                    ` : `<button class="edit-btn" onclick="event.stopPropagation(); editBean(${bean.id})" style="margin-top: 0.75rem;">Edit</button>`}
+                </div>
+            `}).join('');
+
+            // Add click handlers to expand cards
+            document.querySelectorAll('.bean-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('edit-btn')) {
+                        card.classList.toggle('expanded');
+                    }
+                });
+            });
+        }
+
+        function hasDetails(bean) {
+            return bean.variety || bean.subregion || bean.producer || bean.roastDate || bean.brewDate || bean.notes || bean.photo;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        // Filter handling
+        filterBar.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-chip')) {
+                document.querySelectorAll('.filter-chip').forEach(chip => {
+                    chip.classList.remove('active');
+                });
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.filter;
+                renderBeans();
+            }
+        });
+
+        // Initial render
+        renderBeans();
+
+        // Export functionality
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            const dataStr = JSON.stringify(beans, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `beanez-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            // Show confirmation
+            alert('✅ Backup exported! Save this file to iCloud, Google Drive, or email it to yourself.');
+        });
+
+        // Import functionality
+        document.getElementById('importBtn').addEventListener('click', () => {
+            document.getElementById('importFile').click();
+        });
+
+        document.getElementById('importFile').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const importedBeans = JSON.parse(event.target.result);
+                    
+                    // Validate it's an array
+                    if (!Array.isArray(importedBeans)) {
+                        alert('❌ Invalid backup file format');
+                        return;
+                    }
+
+                    // Ask user if they want to merge or replace
+                    const merge = confirm('Merge with existing beans? (Cancel = Replace all)');
+                    
+                    if (merge) {
+                        // Merge: add imported beans that don't already exist
+                        const existingIds = new Set(beans.map(b => b.id));
+                        const newBeans = importedBeans.filter(b => !existingIds.has(b.id));
+                        beans = [...beans, ...newBeans];
+                    } else {
+                        // Replace all
+                        beans = importedBeans;
+                    }
+
+                    localStorage.setItem('beanezBeans', JSON.stringify(beans));
+                    renderBeans();
+                    alert(`✅ Import successful! ${importedBeans.length} beans loaded.`);
+                } catch (error) {
+                    alert('❌ Error reading backup file. Make sure it\'s a valid BeanEZ backup.');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset file input
+            e.target.value = '';
+        });
+
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
+    </script>
+</body>
+</html>
